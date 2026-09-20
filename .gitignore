@@ -1,0 +1,33 @@
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# C++ 编译产物
+*.obj
+*.lib
+*.exp
+*.dll
+*.pdb
+*.ilk
+*.exe
+
+# 备份 / 临时
+*.bak
+*.tmp
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.eclipse/
+.settings/
+.classpath
+.project
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Java
+*.class

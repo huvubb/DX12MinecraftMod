@@ -1,0 +1,24 @@
+{
+    "schemaVersion": 1,
+    "id": "dx12mod",
+    "version": "1.0.0",
+    "name": "DX12 Renderer Mod",
+    "description": "Replace OpenGL with DirectX 12 renderer",
+    "authors": ["huvubb"],
+    "contact": {},
+    "license": "MIT",
+    "environment": "client",
+    "entrypoints": {
+        "main": [
+            "com.yourmod.YourMod"
+        ]
+    },
+    "mixins": [
+        "mixin.json"
+    ],
+    "depends": {
+        "fabricloader": ">=0.14.0",
+        "minecraft": ">=1.19.2",
+        "java": ">=17"
+    }
+}
