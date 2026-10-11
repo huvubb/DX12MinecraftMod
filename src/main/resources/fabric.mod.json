@@ -1,16 +1,23 @@
 {
     "schemaVersion": 1,
     "id": "dx12mod",
-    "version": "1.0.0",
+    "version": "${version}",
     "name": "DX12 Renderer Mod",
-    "description": "Replace OpenGL with DirectX 12 renderer",
+    "description": "Render Minecraft through the Mesa Direct3D 12 backend, enabled automatically on Windows x64.",
     "authors": ["huvubb"],
-    "contact": {},
+    "contact": {
+        "homepage": "https://github.com/huvubb/DX12MinecraftMod",
+        "sources": "https://github.com/huvubb/DX12MinecraftMod",
+        "issues": "https://github.com/huvubb/DX12MinecraftMod/issues"
+    },
     "license": "MIT",
     "environment": "client",
     "entrypoints": {
+        "preLaunch": [
+            "io.github.huvubb.dx12mod.Dx12Bootstrap"
+        ],
         "main": [
-            "com.yourmod.YourMod"
+            "io.github.huvubb.dx12mod.Dx12Mod"
         ]
     },
     "mixins": [
@@ -18,7 +25,7 @@
     ],
     "depends": {
         "fabricloader": ">=0.14.0",
-        "minecraft": ">=1.19.2",
+        "minecraft": "1.19.2",
         "java": ">=17"
     }
 }

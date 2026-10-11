@@ -1,0 +1,19 @@
+Mesa D3D12 26.2.4, Windows x86-64
+
+Unmodified opengl32.dll from mmozeiko/build-mesa:
+https://github.com/mmozeiko/build-mesa/releases/tag/26.2.4
+Archive: mesa-d3d12-x64-26.2.4.7z
+Archive SHA-256: f841e6795a9256e497e6e980bd49afce70818425d79fd0c3492ac66dada9f283
+DLL SHA-256: 5bae84a373e9b0bd732780b01533bc5e50ce3e0144a39836b8332201b89e9f42
+
+Mesa source: https://archive.mesa3d.org/mesa-26.2.4.tar.xz
+Source SHA-256: bce5f7fbebb934373b86c999a064d52fb5065878dc57f287f95346648ec832e9
+Upstream licenses are included in the licenses directory.
+Mesa is copyright its respective contributors, including Brian Paul,
+Microsoft Corporation, Collabora Ltd., Intel Corporation, and others.
+Per-file copyright and license notices are available in the source archive.
+The D3D12 driver copyright and permission notice is reproduced in D3D12-LICENSE.txt.
+
+This backend translates Minecraft's OpenGL API calls into Direct3D 12 GPU work.
+It does not remove the game's OpenGL API interface. No system graphics driver,
+Java installation, or game executable is replaced.

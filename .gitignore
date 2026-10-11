@@ -1,6 +1,7 @@
 # Gradle
 .gradle/
 build/
+run/
 !gradle/wrapper/gradle-wrapper.jar
 
 # C++ 编译产物
@@ -8,6 +9,7 @@ build/
 *.lib
 *.exp
 *.dll
+!src/main/resources/natives/windows-x86_64/mesa-26.2.4/opengl32.dll
 *.pdb
 *.ilk
 *.exe

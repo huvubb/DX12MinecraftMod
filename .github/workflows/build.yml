@@ -1,0 +1,30 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: gradle
+      - name: Build and check disabled backend
+        run: bash ./gradlew build backendDisabledCheck --no-daemon
+      - uses: actions/upload-artifact@v7
+        with:
+          name: DX12MinecraftMod
+          path: build/libs/*.jar
+          if-no-files-found: error

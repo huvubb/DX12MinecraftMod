@@ -1,10 +1,10 @@
 plugins {
-    id 'fabric-loom' version '1.9-SNAPSHOT'
+    id 'fabric-loom' version '1.9.2'
     id 'maven-publish'
 }
 
-version = '1.0.0'
-group = 'com.yourmod'
+version = '1.1.0-alpha.1'
+group = 'io.github.huvubb'
 
 repositories {
     mavenCentral()
@@ -20,8 +20,26 @@ dependencies {
     modImplementation 'net.fabricmc:fabric-loader:0.14.21'
 }
 
+configurations { backendNatives }
+dependencies {
+    backendNatives 'org.lwjgl:lwjgl:3.3.2:natives-windows'
+    backendNatives 'org.lwjgl:lwjgl-glfw:3.3.2:natives-windows'
+    backendNatives 'org.lwjgl:lwjgl-opengl:3.3.2:natives-windows'
+}
+
 loom {
-    accessWidenerPath = file("src/main/resources/dx12mod.accesswidener")
+    mods {
+        dx12mod { sourceSet sourceSets.main }
+        dx12smoke { sourceSet sourceSets.test }
+    }
+    runs {
+        worldSmoke {
+            client()
+            source = sourceSets.test
+            runDir = 'build/world-smoke'
+            vmArg '-Ddx12.worldSmoke=true'
+        }
+    }
 }
 
 processResources {
@@ -33,6 +51,36 @@ processResources {
 
 java {
     withSourcesJar()
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+tasks.register('backendCheck', JavaExec) {
+    dependsOn testClasses
+    classpath = sourceSets.test.runtimeClasspath + configurations.backendNatives
+    mainClass = 'io.github.huvubb.dx12mod.BackendCheck'
+    args file('build/backend-check').absolutePath
+}
+
+tasks.register('backendDisabledCheck', JavaExec) {
+    dependsOn testClasses
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'io.github.huvubb.dx12mod.BackendCheck'
+    systemProperty 'dx12.disable', 'true'
+}
+
+tasks.named('runWorldSmoke') {
+    doFirst { delete file('build/world-smoke/dx12-smoke.ok') }
+    doLast {
+        if (!file('build/world-smoke/dx12-smoke.ok').isFile()) {
+            throw new GradleException('DX12 world/F3 check failed; see the game log.')
+        }
+    }
+}
+
+tasks.named('test') {
+    // GPU and world checks are standalone programs, not JUnit tests.
+    failOnNoDiscoveredTests = false
 }
 
 publishing {

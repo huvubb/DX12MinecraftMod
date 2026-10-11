@@ -1,0 +1,28 @@
+name: Bug report / 问题反馈
+description: 提交可复现的启动、渲染或稳定性问题
+body:
+  - type: input
+    id: versions
+    attributes:
+      label: Minecraft / Mod / Fabric Loader / Java versions
+    validations:
+      required: true
+  - type: input
+    id: hardware
+    attributes:
+      label: Windows version / GPU / driver version
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce / 复现步骤
+      description: Include expected and actual behavior, F3 renderer and other installed mods.
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Redacted logs / 脱敏日志
+      description: Remove account tokens, private addresses and personal directory information.
+      render: text
