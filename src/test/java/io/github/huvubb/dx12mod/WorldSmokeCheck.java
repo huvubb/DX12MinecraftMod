@@ -23,6 +23,7 @@ import net.minecraft.client.gui.screens.worldselection.SelectWorldScreen;
 public final class WorldSmokeCheck implements ClientModInitializer {
     private int worldFrames;
     private boolean entering;
+    private int guiScaleChecks;
 
     @Override
     public void onInitializeClient() {
@@ -55,6 +56,20 @@ public final class WorldSmokeCheck implements ClientModInitializer {
         if (minecraft.getOverlay() != null) return false;
         minecraft.options.pauseOnLostFocus = false;
         minecraft.options.renderDistance().set(4);
+        if (minecraft.screen instanceof TitleScreen && guiScaleChecks < 12) {
+            int scale = guiScaleChecks++ % 4;
+            int color = minecraft.getMainRenderTarget().getColorTextureId();
+            minecraft.options.guiScale().set(scale);
+            minecraft.resizeDisplay();
+            if (minecraft.getMainRenderTarget().getColorTextureId() != color) {
+                throw new AssertionError("GUI scale recreated the same-size GPU target");
+            }
+            if (minecraft.getWindow().getGuiScaledWidth() <= 0 || minecraft.getWindow().getGuiScaledHeight() <= 0) {
+                throw new AssertionError("Invalid GUI size after scale change");
+            }
+            System.out.println("[DX12-SMOKE] GUI scale changed: " + scale);
+            return false;
+        }
         if (minecraft.level != null && minecraft.player != null) {
             minecraft.options.renderDebug = true;
             if (++worldFrames < 80) return false;

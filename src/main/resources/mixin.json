@@ -8,7 +8,7 @@
         "WindowMixin",
         "DebugScreenOverlayMixin"
     ],
-    "client": ["SodiumDrawMixin"],
+    "client": ["SodiumDrawMixin", "MinecraftMixin"],
     "server": [],
     "injectors": {
         "defaultRequire": 1
