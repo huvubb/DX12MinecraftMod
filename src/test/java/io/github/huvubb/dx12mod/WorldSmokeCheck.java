@@ -58,6 +58,26 @@ public final class WorldSmokeCheck implements ClientModInitializer {
         if (minecraft.level != null && minecraft.player != null) {
             minecraft.options.renderDebug = true;
             if (++worldFrames < 80) return false;
+            if (Boolean.getBoolean("dx12.irisSmoke") && worldFrames < 220) {
+                Class<?> api = Class.forName("net.irisshaders.iris.api.v0.IrisApi");
+                Object iris = api.getMethod("getInstance").invoke(null);
+                Class<?> configApi = Class.forName("net.irisshaders.iris.api.v0.IrisApiConfig");
+                Object config = api.getMethod("getConfig").invoke(iris);
+                if (worldFrames == 80) {
+                    verifyIris();
+                    configApi.getMethod("setShadersEnabledAndApply", boolean.class).invoke(config, false);
+                } else if (worldFrames == 100) {
+                    if (Boolean.TRUE.equals(api.getMethod("isShaderPackInUse").invoke(iris))) {
+                        throw new AssertionError("Iris shaders did not disable");
+                    }
+                    configApi.getMethod("setShadersEnabledAndApply", boolean.class).invoke(config, true);
+                } else if (worldFrames == 160) {
+                    verifyIris();
+                    Class.forName("net.coderbot.iris.Iris").getMethod("reload").invoke(null);
+                    System.out.println("[DX12-SMOKE] Iris disable/enable/reload completed");
+                }
+                return false;
+            }
             Field overlay = Gui.class.getDeclaredField("debugScreen");
             overlay.setAccessible(true);
             DebugScreenOverlay debug = (DebugScreenOverlay)overlay.get(minecraft.gui);
@@ -65,6 +85,9 @@ public final class WorldSmokeCheck implements ClientModInitializer {
             systemInfo.setAccessible(true);
             List<?> lines = (List<?>)systemInfo.invoke(debug);
             if (!lines.contains("Render backend: DirectX 12 (Mesa D3D12)")) throw new AssertionError("F3 backend status missing");
+            if (Boolean.getBoolean("dx12.irisSmoke")) {
+                verifyIris();
+            }
             System.out.println("[DX12-SMOKE] F3: " + lines);
             Path image = FabricLoader.getInstance().getGameDir().resolve("dx12-world.png");
             try (NativeImage pixels = Screenshot.takeScreenshot(minecraft.getMainRenderTarget())) {
@@ -95,5 +118,19 @@ public final class WorldSmokeCheck implements ClientModInitializer {
             }
         }
         return false;
+    }
+
+    private static void verifyIris() throws ReflectiveOperationException {
+        Class<?> api = Class.forName("net.irisshaders.iris.api.v0.IrisApi");
+        Object iris = api.getMethod("getInstance").invoke(null);
+        if (!Boolean.TRUE.equals(api.getMethod("isShaderPackInUse").invoke(iris))) {
+            throw new AssertionError("Iris shader pack is not active");
+        }
+        Class<?> implementation = Class.forName("net.coderbot.iris.Iris");
+        if (Boolean.TRUE.equals(implementation.getMethod("isFallback").invoke(null))) {
+            throw new AssertionError("Iris fell back after shader compilation failed");
+        }
+        System.out.println("[DX12-SMOKE] Iris pack active: "
+                + implementation.getMethod("getCurrentPackName").invoke(null));
     }
 }

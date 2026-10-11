@@ -14,6 +14,8 @@
 
 ## 其他已见情况
 
+Iris + Sodium 0.4.4 在旧版后端上触发过 Java 堆外内存持续增长：游戏进程提交量约 32GB，随后 `GL_OUT_OF_MEMORY` 和 Mesa DLL 内访问异常。Java 堆并未耗尽，因此降低 `-Xmx` 不能解决。alpha.2 在核验 D3D12 后，将 Sodium 的批量索引绘制拆为逐次绘制；日志应包含 `Sodium draws submitted individually`。该规避仅覆盖已测试的版本与设备，详见 [光影检查](SHADERS.md)。
+
 - `Unsupported JNI version detected` 来自 LWJGL，提示运行时兼容风险；一次成功运行不足以证明无害。
 - 开发账号的密钥 / Realms 认证失败应与渲染错误分开检查。
 - 此前资源下载失败并跳过下载，产生缺失音效警告，因此没有验证音效完整性。正常检查应完成资源下载。

@@ -7,13 +7,13 @@
 
 通过 [Mesa D3D12](https://docs.mesa3d.org/drivers/d3d12.html)，将游戏原有 OpenGL 调用转换为 Direct3D 12 GPU 绘制。默认启用，驱动内置于 JAR，启动时自动解压、校验并加载。游戏仍保留 OpenGL API 接口。
 
-当前是 **alpha 实验版**：已经在 Intel UHD Graphics 上进入世界验证，但没有完成长期稳定性、其他显卡、整合包和光影模组兼容测试，也没有证明性能提升。支持范围仅为 **Minecraft 1.19.2**。
+当前是 **alpha 实验版**：已经在 Intel UHD Graphics 上进入世界验证，并通过指定版本的 Complementary / Iris 光影短测试；长期稳定性、其他显卡和整合包尚未覆盖，也没有证明性能提升。支持范围仅为 **Minecraft 1.19.2**。
 
 [English](README.en.md) · [下载实验版](https://github.com/huvubb/DX12MinecraftMod/releases) · [反馈问题](https://github.com/huvubb/DX12MinecraftMod/issues/new/choose) · [参与开发](CONTRIBUTING.md)
 
 ## 安装与确认
 
-1. 使用 Windows x64、64 位 Java、支持 DirectX 12 的显卡和驱动。Minecraft 1.19.2 要求 Java 17+；本地游戏验证使用 Java 21、Fabric Loader 0.14.21。
+1. 使用 Windows x64、64 位 Java、支持 DirectX 12 的显卡和驱动。本地原版验证使用 Java 21，Iris 检查使用 Java 17，Fabric Loader 0.14.21。
 2. 从 Releases 下载普通模组 JAR，放进游戏实例的 `mods` 目录。升级时移走旧版 dx12mod JAR，只保留一份；`-sources.jar` 是源码包。
 3. 正常启动，无需参数或独立 DLL。进入世界后按 F3，应看到 `D3D12 (你的显卡)` 和 `Render backend: DirectX 12 (Mesa D3D12)`。
 
@@ -29,11 +29,11 @@
 
 Java 25 / Loader 0.19.3 的游戏组合尚未验证。截图使用 4 区块渲染距离，帧率不能当作性能对比。其他显卡、渲染模组、资源包和长时间运行仍需要验证。
 
-[日志与排查](docs/TROUBLESHOOTING.md) · [架构与来源](docs/ARCHITECTURE.md) · [路线图](docs/ROADMAP.md)
+[Iris 光影与内存问题](docs/SHADERS.md) · [日志与排查](docs/TROUBLESHOOTING.md) · [架构与来源](docs/ARCHITECTURE.md) · [路线图](docs/ROADMAP.md)
 
 ## 构建与验证
 
-安装 64 位 JDK 21，在项目根目录运行：
+安装 64 位 JDK 21（构建）与 JDK 17（世界检查），在项目根目录运行：
 
 ```powershell
 .\gradlew.bat build

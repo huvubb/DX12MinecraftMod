@@ -91,6 +91,10 @@ public final class Dx12Bootstrap implements PreLaunchEntrypoint {
         }
     }
 
+    public static boolean isActive() {
+        return active;
+    }
+
     public static void verifyRenderer(String actualRenderer) {
         renderer = actualRenderer == null ? "unknown" : actualRenderer;
         if (Boolean.getBoolean("dx12.disable")) return;

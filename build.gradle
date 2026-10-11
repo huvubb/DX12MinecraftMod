@@ -3,11 +3,12 @@ plugins {
     id 'maven-publish'
 }
 
-version = '1.1.0-alpha.1'
+version = '1.1.0-alpha.2'
 group = 'io.github.huvubb'
 
 repositories {
     mavenCentral()
+    maven { url = 'https://api.modrinth.com/maven' }
     maven {
         name = 'Fabric'
         url = 'https://maven.fabricmc.net/'
@@ -18,6 +19,17 @@ dependencies {
     minecraft 'com.mojang:minecraft:1.19.2'
     mappings loom.officialMojangMappings()
     modImplementation 'net.fabricmc:fabric-loader:0.14.21'
+    if (providers.gradleProperty('irisCompat').isPresent()) {
+        modLocalRuntime 'maven.modrinth:iris:1.6.11+1.19.2'
+        if (!providers.gradleProperty('irisNoSodium').isPresent()) {
+            modLocalRuntime 'maven.modrinth:sodium:mc1.19.2-0.4.4'
+        }
+        modLocalRuntime 'net.fabricmc.fabric-api:fabric-api:0.77.0+1.19.2'
+        // Loom removes nested libraries from remapped mods; provide Iris's bundled libraries in development.
+        runtimeOnly 'org.anarres:jcpp:1.4.14'
+        runtimeOnly 'io.github.douira:glsl-transformer:2.0.0-pre13'
+        runtimeOnly 'org.joml:joml:1.10.4'
+    }
 }
 
 configurations { backendNatives }
@@ -38,6 +50,10 @@ loom {
             source = sourceSets.test
             runDir = 'build/world-smoke'
             vmArg '-Ddx12.worldSmoke=true'
+            if (providers.gradleProperty('irisCompat').isPresent()) {
+                vmArg '-Ddx12.irisSmoke=true'
+                vmArg '-Xmx2G'
+            }
         }
     }
 }
@@ -70,6 +86,7 @@ tasks.register('backendDisabledCheck', JavaExec) {
 }
 
 tasks.named('runWorldSmoke') {
+    javaLauncher = javaToolchains.launcherFor { languageVersion = JavaLanguageVersion.of(17) }
     doFirst { delete file('build/world-smoke/dx12-smoke.ok') }
     doLast {
         if (!file('build/world-smoke/dx12-smoke.ok').isFile()) {

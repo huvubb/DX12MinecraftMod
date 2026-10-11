@@ -6,7 +6,7 @@ An experimental **DirectX 12 backend for Minecraft 1.19.2, Fabric, Windows x64**
 
 The mod loads the bundled [Mesa D3D12 driver](https://docs.mesa3d.org/drivers/d3d12.html) before GLFW creates the game context. Minecraft retains its OpenGL API; Mesa converts those calls into Direct3D 12 GPU work. Enabled automatically, with real renderer verification before F3 reports it as active.
 
-**Alpha software.** Tested locally on Intel UHD Graphics with Java 21 and Fabric Loader 0.14.21. Long sessions, other GPUs, shader packs, rendering mods and the Java 25 / Loader 0.19.3 game combination remain unverified. No performance improvement is claimed. Only Minecraft **1.19.2** is supported.
+**Alpha software.** Tested locally on Intel UHD Graphics with Java 21 (vanilla) and Java 17 (Iris), Fabric Loader 0.14.21. Iris checks and the native-memory workaround are documented in the [shader guide](docs/SHADERS.md). Long sessions, other GPUs, modpacks and the Java 25 / Loader 0.19.3 game combination remain unverified. No performance improvement is claimed. Only Minecraft **1.19.2** is supported.
 
 ## Install
 
@@ -18,7 +18,7 @@ Enter a world and press F3. Look for `D3D12 (your adapter)` and `Render backend:
 
 ## Build and check
 
-With JDK 21 installed:
+With JDK 21 for builds and JDK 17 for the world check installed:
 
 ```powershell
 .\gradlew.bat build
